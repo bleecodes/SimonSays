@@ -1,6 +1,7 @@
 package com.first.bleed.simonsays;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -9,8 +10,7 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
+
 
 public class MainActivity extends AppCompatActivity {
     Button greenButton;
@@ -19,14 +19,22 @@ public class MainActivity extends AppCompatActivity {
     Button blueButton;
     Button startButton;
     String TAG = "MainActivity";
-    int timeToWait = 1*1000;
-    Timer waitTimer;
-    TimerTask greenTimerTask;
+    int dullWaitTime = 1*1500;
+    int lightWaitTime = 1000;
     List<colors> colorSequence;
     private colors currentColor;
     private List<colors> userColorSequence;
     private boolean userturn = false;
-    TimerTask yellowTimerTask;
+    Handler delayHandler = new Handler();
+    Runnable dullGreenRunnable;
+    Runnable dullYellowRunnable;
+    Runnable dullRedRunnable;
+    Runnable dullBlueRunnable;
+    Runnable greenRunnable;
+    Runnable blueRunnable;
+    Runnable yellowRunnable;
+    Runnable redRunnable;
+
 
     //NEEDS TO START THE GAME
     //USER NEEDS TO CLICK THE SAME NUMBER OF COLORS THAT WERE SHOWN
@@ -38,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         initFindView();
         initListeners();
-        timerTasks();
-        waitTimer = new Timer();
+       initRunnables();
         colorSequence = new ArrayList<>();
         userColorSequence = new ArrayList<>();
 
@@ -94,19 +101,77 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    public void initRunnables(){
+        greenRunnable = new Runnable() {
+            @Override
+            public void run() {
+                greenButton.setBackgroundResource(R.drawable.bg_green);
 
-    public void timerTasks(){
+            }
+        };
+        dullGreenRunnable = new Runnable() {
+            @Override
+            public void run() {
+                greenButton.setBackgroundResource(R.drawable.on_click_green);
+            }
+        };
+        yellowRunnable = new Runnable() {
+            @Override
+            public void run() {
+                yellowButton.setBackgroundResource(R.drawable.bg_yellow);
 
-//        yellowTimerTask = new TimerTask() {
+            }
+        };
+        dullYellowRunnable = new Runnable() {
+            @Override
+            public void run() {
+                yellowButton.setBackgroundResource(R.drawable.on_click_yellow);
+            }
+        };
+        redRunnable = new Runnable() {
+            @Override
+            public void run() {
+                redButton.setBackgroundResource(R.drawable.bg_red);
+
+            }
+        };
+        dullRedRunnable = new Runnable() {
+            @Override
+            public void run() {
+                redButton.setBackgroundResource(R.drawable.on_click_red);
+            }
+        };
+        blueRunnable = new Runnable() {
+            @Override
+            public void run() {
+                blueButton.setBackgroundResource(R.drawable.bg_blue);
+
+            }
+        };
+        dullBlueRunnable = new Runnable() {
+            @Override
+            public void run() {
+                blueButton.setBackgroundResource(R.drawable.on_click_blue);
+            }
+        };
     }
 
     private void userPlaysSequence() {
         if (userturn) {
             userColorSequence.add(currentColor);
-            if(userColorSequence.size() == colorSequence.size())
-            {userturn = false;
-            Log.d(TAG, "made it through turn");
-            resetUserSequence();}
+            for(int i = 0; i < userColorSequence.size(); i ++){
+                if( userColorSequence.get(i) != colorSequence.get(i)){
+                    startButton.setText("You Lost");
+                    resetUserSequence();
+                    resetColorSequence();}
+            }
+            if(userColorSequence.size() == colorSequence.size() && userColorSequence.size() != 0) {
+                userturn = false;
+                startButton.setText("round"+colorSequence.size());
+                Log.d(TAG, "made it through turn");
+                resetUserSequence();}
+
+
         }
     }
     public void startColorSequence(){
@@ -115,96 +180,69 @@ public class MainActivity extends AppCompatActivity {
         Random rnd = new Random();
 
                 int nextColor = rnd.nextInt(4);
-                colorSequence.add(choiceColor(1));
+                colorSequence.add(choiceColor(nextColor));
 
-                for(int i = 0; i < colorSequence.size(); i++)
-                {
-
-//                    SystemClock.sleep(500);
-                    //PUT SWITCH INTO A TIMER TO SPACE OUT TIMERS?
+                for(int i = 0 ; i < colorSequence.size(); i++){
                     switch (colorSequence.get(i)) {
 
                         case GREEN:
+                            Log.d(TAG, "green");
+                            greenButtonChange(dullWaitTime,lightWaitTime);
 
-                            greenTimerTask = new TimerTask(){
-                                @Override
-                                public void run() {
-
-                                    greenButton.setBackgroundColor(getResources().getColor(R.color.dullgreen));
-//                                    android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views.
-                                }
-
-
-                            };
-
-                            runOnUiThread(greenTimerTask);
-                            //waitTimer.schedule(greenTimerTask,timeToWait);
-                            greenButton.setBackgroundColor(getResources().getColor(R.color.green));
-//                            greenButton.startAnimation(mAnimation);
-//                            greenButton.clearAnimation();
 
                             break;
 
                         case YELLOW:
-//                            yellowButton.startAnimation(mAnimation);
-//                            yellowButton.clearAnimation();
+                            yellowButtonChange(dullWaitTime,lightWaitTime);
+////
                             break;
 
                         case RED:
-//                            redButton.startAnimation(mAnimation);
-//                            redButton.clearAnimation();
+                            redButtonChange(dullWaitTime,lightWaitTime);
+////
                             break;
 
                         case BLUE:
-//                            blueButton.startAnimation(mAnimation);
-//                            blueButton.clearAnimation();
-//                            blueButton.setBackgroundColor(getResources().getColor(R.color.blue));
-//                            taskWaitTimer = new TimerTask() {
-//                                @Override
-//                                public void run() {
-//                                    blueButton.setBackgroundColor(getResources().getColor(R.color.dullblue));
-//                                    //blueButton.setBackgroundResource(R.drawable.on_click_blue);
-//                                }
-//                            };waitTimer.schedule(taskWaitTimer,1000);
-                            //blueButton.setBackgroundResource(R.drawable.bg_blue);
-                            //blueColorChange();
-
-//                            blueButton.setBackgroundColor(getResources().getColor(R.color.blue));
+                            blueButtonChange(dullWaitTime,lightWaitTime);
+//
                             break;
 
                     }
+                    dullWaitTime+=1000;
+                    lightWaitTime+=1000;
+                    //System.out.println(dullWaitTime);
+
                 }
 
+        dullWaitTime = 1500;
+        lightWaitTime = 1000;
+
     }
-
-    private void blueColorChange() {
-
-    }
-
-//    private void redColorChange() {
-//        redButton.setBackgroundResource(R.drawable.bg_red);
-////        SystemClock.sleep(1000);
-//        redButton.setBackgroundResource(R.drawable.on_click_red);
-//    }
-//
-//    private void yellowColorChange() {
-//        yellowButton.setBackgroundResource(R.drawable.bg_yellow);
-////        SystemClock.sleep(1000);
-//        yellowButton.setBackgroundResource(R.drawable.on_click_yellow);
-//    }
-//    public void greenColorChange(){
-//        greenButton.setBackgroundResource(R.drawable.bg_green);
-//        Log.d(TAG, "onTick: ");
-////        SystemClock.sleep(1000);
-//        greenButton.setBackgroundResource(R.drawable.on_click_green);
-//
-//    }
     public void resetUserSequence(){
         userColorSequence.clear();
     }
     public void resetColorSequence(){
         colorSequence.clear();
     }
+
+    private void greenButtonChange(int dullWaitTime, int lightWaitTime) {
+        delayHandler.postDelayed(dullGreenRunnable,dullWaitTime);
+      delayHandler.postDelayed(greenRunnable,lightWaitTime);
+    }
+    private void yellowButtonChange(int dullWaitTime, int lightWaitTime) {
+        delayHandler.postDelayed(dullYellowRunnable,dullWaitTime);
+        delayHandler.postDelayed(yellowRunnable,lightWaitTime);
+
+    }
+    private void redButtonChange(int dullWaitTime, int lightWaitTime) {
+        delayHandler.postDelayed(dullRedRunnable,dullWaitTime);
+        delayHandler.postDelayed(redRunnable,lightWaitTime);
+    }
+    private void blueButtonChange(int dullWaitTime, int lightWaitTime) {
+        delayHandler.postDelayed(dullBlueRunnable,dullWaitTime);
+        delayHandler.postDelayed(blueRunnable,lightWaitTime);
+    }
+
     public colors choiceColor(int nextColor){
         if(nextColor == 1)
             return currentColor = colors.GREEN;

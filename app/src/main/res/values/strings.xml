@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SimonSays</string>
+    <string name="round">colorSequence.get(i)</string>
 </resources>
