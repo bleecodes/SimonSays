@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -35,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
     Runnable yellowRunnable;
     Runnable redRunnable;
 
-
     //NEEDS TO START THE GAME
-    //USER NEEDS TO CLICK THE SAME NUMBER OF COLORS THAT WERE SHOWN
+    //Title Screen Start Game Read me
+    //Toast to display the round
+    //menu has restart, title screen?
+    // change buttons into cooler buttons
+    //better splash
     //RESTART THE GAME
 
     @Override
@@ -51,6 +56,25 @@ public class MainActivity extends AppCompatActivity {
         userColorSequence = new ArrayList<>();
 
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.game_menu,menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+        if(id == R.id.bt_reset){
+            resetColorSequence();
+            resetUserSequence();
+            return true;
+        }
+//        if(id == R.id.bt_menu){
+//            Toast.makeText(this,"Menu",Toast.LENGTH_LONG).show();
+//            return true;
+//        }
+        return super.onOptionsItemSelected(item);
     }
     public void initFindView(){
         greenButton = (Button) findViewById(R.id.bn_green);
