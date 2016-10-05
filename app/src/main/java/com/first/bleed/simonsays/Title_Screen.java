@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 
 /**
  * Created by BLEED on 10/2/2016.
@@ -20,6 +21,17 @@ public class Title_Screen extends Activity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Title_Screen.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        ImageView infoButton = (ImageView) findViewById(R.id.iv_info);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =
+                        new Intent (Title_Screen.this, Readme.class);
                 startActivity(intent);
                 finish();
             }

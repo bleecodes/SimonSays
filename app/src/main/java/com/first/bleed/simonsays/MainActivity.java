@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     //Toast to display the round
     //menu has restart, title screen?
     // change buttons into cooler buttons
+    //user shouldnt be able to cause multiple button presses to start round
     //better splash
     //RESTART THE GAME
 
