@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,14 @@ public class MainActivity extends AppCompatActivity {
     Runnable redRunnable;
     TextView roundText;
     TextView scoreText;
+    Runnable toastUserRunnable;
 
     //NEEDS TO START THE GAME
     //display score top right corner, what is the scoring system?
     //change startButton text, to something more informative than start, nxt rnd? nxt lvl?
     //menu, any more button it needs?
     //save high score?
+    //fading thing in and out for any change in the game
     //change buttons into cooler buttons
     //better splash
 
@@ -137,6 +140,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void initRunnables(){
+        toastUserRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(MainActivity.this, "Your Turn", Toast.LENGTH_SHORT).show();
+            }
+        };
         greenRunnable = new Runnable() {
             @Override
             public void run() {
@@ -208,8 +217,9 @@ public class MainActivity extends AppCompatActivity {
             if(userColorSequence.size() == colorSequence.size() && userColorSequence.size() != 0) {
                 userturn = false;
                 startButton.setEnabled(true);
+                startButton.setText("Round" +(colorSequence.size()+1));
                 startButton.setVisibility(View.VISIBLE);
-                roundText.setText("Round: "+ colorSequence.size());
+                roundText.setText("Round: "+ (colorSequence.size()+1));
                 Log.d(TAG, "made it through turn");
                 resetUserSequence();}
 
@@ -255,7 +265,7 @@ public class MainActivity extends AppCompatActivity {
                     //System.out.println(dullWaitTime);
 
                 }
-
+        notifyUserTurn(dullWaitTime);
         dullWaitTime = 1500;
         lightWaitTime = 1000;
 
@@ -267,6 +277,9 @@ public class MainActivity extends AppCompatActivity {
         colorSequence.clear();
     }
 
+    private void notifyUserTurn(int dullWaitTime){
+    delayHandler.postDelayed(toastUserRunnable, dullWaitTime);
+}
     private void greenButtonChange(int dullWaitTime, int lightWaitTime) {
         delayHandler.postDelayed(dullGreenRunnable,dullWaitTime);
       delayHandler.postDelayed(greenRunnable,lightWaitTime);
