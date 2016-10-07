@@ -4,8 +4,9 @@
     tools:context=".MainActivity">
     <item
         android:id="@+id/bt_menu"
-        android:title="Menu"
-        app:showAsAction="always" />
+        android:title="Main menu"
+        app:showAsAction="never"
+        android:icon="@android:drawable/btn_radio"/>
     <item
         android:id="@+id/bt_reset"
         android:title="Reset game"

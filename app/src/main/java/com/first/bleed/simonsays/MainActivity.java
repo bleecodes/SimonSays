@@ -1,5 +1,6 @@
 package com.first.bleed.simonsays;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,15 +38,17 @@ public class MainActivity extends AppCompatActivity {
     Runnable blueRunnable;
     Runnable yellowRunnable;
     Runnable redRunnable;
+    TextView roundText;
+    TextView scoreText;
 
     //NEEDS TO START THE GAME
-    //Title Screen Start Game Read me
-    //Toast to display the round
-    //menu has restart, title screen?
-    // change buttons into cooler buttons
-    //user shouldnt be able to cause multiple button presses to start round
+    //display score top right corner, what is the scoring system?
+    //change startButton text, to something more informative than start, nxt rnd? nxt lvl?
+    //menu, any more button it needs?
+    //save high score?
+    //change buttons into cooler buttons
     //better splash
-    //RESTART THE GAME
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +75,12 @@ public class MainActivity extends AppCompatActivity {
             resetUserSequence();
             return true;
         }
-//        if(id == R.id.bt_menu){
-//            Toast.makeText(this,"Menu",Toast.LENGTH_LONG).show();
-//            return true;
-//        }
+        if(id == R.id.bt_menu){
+            Intent intent = new Intent(MainActivity.this,Title_Screen.class);
+            startActivity(intent);
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
     public void initFindView(){
@@ -83,13 +89,17 @@ public class MainActivity extends AppCompatActivity {
         redButton = (Button) findViewById(R.id.bn_red);
         blueButton = (Button) findViewById(R.id.bn_blue);
         startButton = (Button) findViewById(R.id.bn_start);
+        roundText = (TextView) findViewById(R.id.tv_round);
+        scoreText= (TextView) findViewById(R.id.tv_score);
     }
     public void initListeners(){
         startButton.setOnClickListener((new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startColorSequence();
-               userturn = true;
+                userturn = true;
+                startButton.setEnabled(false);
+                startButton.setVisibility(View.INVISIBLE);
             }
         }));
         greenButton.setOnClickListener(new View.OnClickListener() {
@@ -186,13 +196,20 @@ public class MainActivity extends AppCompatActivity {
             userColorSequence.add(currentColor);
             for(int i = 0; i < userColorSequence.size(); i ++){
                 if( userColorSequence.get(i) != colorSequence.get(i)){
+                    userturn = false;
+                    startButton.setEnabled(true);
                     startButton.setText("You Lost");
+                    startButton.setVisibility(View.VISIBLE);
                     resetUserSequence();
-                    resetColorSequence();}
+                    resetColorSequence();
+
+                }
             }
             if(userColorSequence.size() == colorSequence.size() && userColorSequence.size() != 0) {
                 userturn = false;
-                startButton.setText("round"+colorSequence.size());
+                startButton.setEnabled(true);
+                startButton.setVisibility(View.VISIBLE);
+                roundText.setText("Round: "+ colorSequence.size());
                 Log.d(TAG, "made it through turn");
                 resetUserSequence();}
 

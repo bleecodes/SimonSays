@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Title_Screen"></activity>
+        <activity android:name=".Readme"></activity>
         <activity android:name=".MainActivity"></activity>
     </application>
 
